@@ -97,6 +97,8 @@ export interface AdapterExecutionResult {
   sessionParams?: Record<string, unknown> | null;
   sessionDisplayId?: string | null;
   provider?: string | null;
+  /** Exact provider-side execution id, distinct from the Paperclip heartbeat run id. */
+  externalRunId?: string | null;
   biller?: string | null;
   model?: string | null;
   billingType?: AdapterBillingType | null;

@@ -664,6 +664,7 @@ export function mapFinalResultForTest(input: {
     signal: mapped.signal,
     timedOut: false,
     provider: "hermes_gateway",
+    externalRunId: input.terminal.runId,
     model: extractModel(payload),
     ...(mapped.errorCode ? { errorCode: mapped.errorCode } : {}),
     ...(errorMessage ? { errorMessage } : {}),
@@ -932,6 +933,7 @@ export async function execute(ctx: AdapterExecutionContext): Promise<AdapterExec
       errorCode: "hermes_gateway_cancelled",
       errorMessage: "Hermes gateway run was cancelled by the control plane.",
       provider: "hermes_gateway",
+      externalRunId: runId,
       resultJson: {
         run_id: runId,
         status: extractStatus(finalStatus) ?? "cancelled",
@@ -956,6 +958,7 @@ export async function execute(ctx: AdapterExecutionContext): Promise<AdapterExec
       errorCode: "hermes_gateway_timeout",
       errorMessage: `Hermes gateway run timed out after ${timeoutSec}s.`,
       provider: "hermes_gateway",
+      externalRunId: runId,
       resultJson: {
         run_id: runId,
         status: extractStatus(finalStatus) ?? "timeout",
