@@ -127,6 +127,7 @@ describe("execute", () => {
 
     expect(result.exitCode).toBe(0);
     expect(result.summary).toBe("done");
+    expect(result.externalRunId).toBe("run-hermes-1");
     expect(result.usage).toEqual({ inputTokens: 3, outputTokens: 2 });
 
     const calls = fetchMock.mock.calls as Array<[RequestInfo | URL, RequestInit?]>;
@@ -449,6 +450,7 @@ describe("execute", () => {
     const result = await execute(ctx);
 
     expect(result.errorCode).toBe("hermes_gateway_cancelled");
+    expect(result.externalRunId).toBe("run-cancelled");
     expect(fetchMock.mock.calls.some(([input]) => String(input).endsWith("/stop"))).toBe(true);
   });
 
@@ -479,6 +481,7 @@ describe("execute", () => {
 
     expect(result.timedOut).toBe(true);
     expect(result.errorCode).toBe("hermes_gateway_timeout");
+    expect(result.externalRunId).toBe("run-slow");
     expect(fetchMock.mock.calls.some(([input]) => String(input).endsWith("/stop"))).toBe(true);
   });
 });
@@ -665,5 +668,6 @@ describe("mapFinalResultForTest", () => {
     expect(result.exitCode).toBe(1);
     expect(result.errorCode).toBe("hermes_gateway_run_failed");
     expect(result.errorMessage).toBe("boom");
+    expect(result.externalRunId).toBe("run-1");
   });
 });

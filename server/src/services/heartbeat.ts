@@ -5247,6 +5247,10 @@ function normalizeResumeParamsForAdapter(
   return isCanonicalSessionIdForAdapter(adapterType, sessionId) ? normalized : null;
 }
 
+export function resolveAdapterExternalRunId(adapterResult: AdapterExecutionResult): string | null {
+  return readNonEmptyString(adapterResult.externalRunId);
+}
+
 export function resolveNextSessionState(input: {
   adapterType?: string | null;
   codec: AdapterSessionCodec;
@@ -13848,6 +13852,7 @@ export function heartbeatService(db: Db, options: HeartbeatServiceOptions = {}) 
         signal: adapterResult.signal,
         usageJson,
         resultJson: persistedResultJson,
+        externalRunId: resolveAdapterExternalRunId(adapterResult),
         sessionIdAfter: nextSessionState.displayId ?? nextSessionState.legacySessionId,
         stdoutExcerpt,
         stderrExcerpt,

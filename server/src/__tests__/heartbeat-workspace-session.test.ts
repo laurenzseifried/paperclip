@@ -28,6 +28,7 @@ import {
   resolveExecutionWorkspaceConfigFreshness,
   resolveExecutionWorkspaceReuseRequestForIssue,
   resolveExecutionWorkspaceReuseProvisioningPolicy,
+  resolveAdapterExternalRunId,
   resolveNextSessionState,
   resolveTaskSessionConfigFreshness,
   requiresPushCapabilityPreflight,
@@ -2356,6 +2357,31 @@ describe("buildExplicitResumeSessionOverride", () => {
 });
 
 describe("resolveNextSessionState", () => {
+  it("preserves the provider run id as the heartbeat external run id", () => {
+    expect(
+      resolveAdapterExternalRunId({
+        exitCode: 0,
+        signal: null,
+        timedOut: false,
+        externalRunId: "run-hermes-1",
+      }),
+    ).toBe("run-hermes-1");
+  });
+
+  it.each([undefined, null, "", "   "])(
+    "maps an absent provider run id (%s) to null",
+    (externalRunId) => {
+      expect(
+        resolveAdapterExternalRunId({
+          exitCode: 1,
+          signal: null,
+          timedOut: false,
+          externalRunId,
+        }),
+      ).toBeNull();
+    },
+  );
+
   it("preserves previous valid Hermes session state when failed adapter output reports prose tokens", () => {
     const result = resolveNextSessionState({
       adapterType: "hermes_local",
